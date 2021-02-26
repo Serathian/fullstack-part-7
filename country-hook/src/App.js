@@ -21,13 +21,22 @@ const useCountry = (name) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios(
+        const response = await axios.get(
           `https://restcountries.eu/rest/v2/name/${name}?fullText=true`
         )
-        response.found = true
-        setCountry(response)
+        switch (response.status) {
+          case 200:
+            console.log('200', response)
+            response.found = true
+            setCountry(response)
+            break
+          default:
+            setCountry(null)
+            break
+        }
       } catch (error) {
         console.log(error.message)
+        setCountry(name)
       }
     }
     if (name) fetchData()
